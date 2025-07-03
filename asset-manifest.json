@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/rescue-tails-ukraine/static/css/main.1ced4717.css",
-    "main.js": "/rescue-tails-ukraine/static/js/main.b1a10a82.js",
+    "main.css": "/rescue-tails-ukraine/static/css/main.bbf30fcc.css",
+    "main.js": "/rescue-tails-ukraine/static/js/main.e1865feb.js",
     "index.html": "/rescue-tails-ukraine/index.html",
-    "main.1ced4717.css.map": "/rescue-tails-ukraine/static/css/main.1ced4717.css.map",
-    "main.b1a10a82.js.map": "/rescue-tails-ukraine/static/js/main.b1a10a82.js.map"
+    "main.bbf30fcc.css.map": "/rescue-tails-ukraine/static/css/main.bbf30fcc.css.map",
+    "main.e1865feb.js.map": "/rescue-tails-ukraine/static/js/main.e1865feb.js.map"
   },
   "entrypoints": [
-    "static/css/main.1ced4717.css",
-    "static/js/main.b1a10a82.js"
+    "static/css/main.bbf30fcc.css",
+    "static/js/main.e1865feb.js"
   ]
 }
