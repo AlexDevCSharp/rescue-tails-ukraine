@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/rescue-tails-ukraine/static/css/main.1ced4717.css",
+    "main.js": "/rescue-tails-ukraine/static/js/main.b1a10a82.js",
+    "index.html": "/rescue-tails-ukraine/index.html",
+    "main.1ced4717.css.map": "/rescue-tails-ukraine/static/css/main.1ced4717.css.map",
+    "main.b1a10a82.js.map": "/rescue-tails-ukraine/static/js/main.b1a10a82.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1ced4717.css",
+    "static/js/main.b1a10a82.js"
+  ]
+}
