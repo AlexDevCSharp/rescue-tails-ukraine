@@ -1,6 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleHelpClick = () => {
+    if (user) {
+      navigate("/posts");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="text-gray-800">
       {/* Hero */}
@@ -24,12 +36,12 @@ const Home = () => {
             >
               View Rescue Stories
             </Link>
-            <Link
-              to="/login"
+            <button
+              onClick={handleHelpClick}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
             >
               Help Now
-            </Link>
+            </button>
           </div>
         </div>
       </section>
@@ -110,6 +122,7 @@ const Home = () => {
         >
           I Want to Help
         </Link>
+        <Link to="/volunteers" className="text-blue-600 underline">Manage Volunteers</Link>
       </section>
     </div>
   );

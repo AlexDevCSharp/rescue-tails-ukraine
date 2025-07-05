@@ -7,12 +7,16 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import PostDetail from './pages/PostDetail';
 import EditPost from './pages/EditPost';
-
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import AddVolunteer from "./pages/AddVolunteer";
+import Volunteers from "./pages/Volunteers";
 
 function App() {
   return (
     <>
       <Navbar />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/posts" element={<Posts />} />
@@ -27,7 +31,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin/add-volunteer" element={<AddVolunteer />} />
+        <Route path="/volunteers" element={<ProtectedRoute><Volunteers /></ProtectedRoute>} />
       </Routes>
+      <Footer />
     </>
   );
 }

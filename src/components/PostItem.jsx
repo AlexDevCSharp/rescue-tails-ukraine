@@ -1,38 +1,96 @@
-import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const PostItem = ({ post, onDelete }) => {
   const { user } = useAuth();
-  const isAdmin = user?.email === 'admin@rescuetails.org';
+  const isAdmin = user?.email === "admin@rescuetails.org";
+  const {
+    title,
+    description,
+    imageUrl,
+    facebookLink,
+    tags = [],
+    volunteerName,
+    volunteerLink,
+  } = post;
+
+  const tagStyles = {
+    urgent: "bg-red-100 text-red-700",
+    food: "bg-yellow-100 text-yellow-800",
+    medical: "bg-blue-100 text-blue-800",
+  };
 
   return (
-    <div className="bg-white shadow rounded overflow-hidden flex flex-col">
-      {post.imageUrl && (
+    <div className="bg-white shadow rounded overflow-hidden flex flex-col border border-gray-200 hover:shadow-lg transition">
+      {imageUrl && (
         <img
-          src={post.imageUrl}
+          src={imageUrl}
           alt="Animal"
           className="h-64 w-full object-cover"
         />
       )}
-      <div className="p-4 flex flex-col flex-grow justify-between">
+      <div className="p-4 sm:p-6 flex flex-col flex-grow justify-between">
         <div>
-          <h2 className="text-xl font-bold mb-2">
-            <Link to={`/posts/${post.id}`} className="hover:underline text-blue-800">
-              {post.title}
+          <h2 className="text-xl font-bold mb-2 text-gray-800">
+            <Link
+              to={`/posts/${post.id}`}
+              className="hover:underline text-blue-800"
+            >
+              {title}
             </Link>
           </h2>
-          <p className="text-gray-700 text-sm mb-4">{post.description}</p>
+
+          <p className="text-gray-700 text-sm mb-3">
+            {description.length > 200
+              ? `${description.slice(0, 200)}...`
+              : description}
+          </p>
+
+          {volunteerName && (
+            <p className="text-sm text-gray-600 mb-2">
+              By{" "}
+              <a
+                href={volunteerLink}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {volunteerName}
+              </a>
+            </p>
+          )}
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className={`px-2 py-1 text-xs font-semibold rounded ${
+                    tagStyles[tag] || "bg-gray-200 text-gray-800"
+                  }`}
+                >
+                  {tag === "food"
+                    ? "Food Needed"
+                    : tag === "urgent"
+                    ? "Urgent"
+                    : tag === "medical"
+                    ? "Medical Help"
+                    : tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="mt-auto flex justify-between items-center">
-          {post.facebookLink && (
+        <div className="mt-auto flex justify-between items-center pt-2 border-t border-gray-100">
+          {facebookLink && (
             <a
-              href={post.facebookLink}
+              href={facebookLink}
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 hover:underline text-sm"
             >
-              View on Facebook
+              📎 View on Facebook
             </a>
           )}
 
@@ -41,7 +99,7 @@ const PostItem = ({ post, onDelete }) => {
               onClick={() => onDelete(post.id, post.imageUrl)}
               className="text-red-600 text-sm hover:underline"
             >
-              Delete
+              🗑 Delete
             </button>
           )}
         </div>

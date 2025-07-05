@@ -1,42 +1,115 @@
-import { useEffect, useState } from 'react';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { ref, deleteObject } from 'firebase/storage';
-import { db, storage } from '../firebase/config';
-import PostItem from '../components/PostItem';
+import { useEffect, useState } from "react";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../firebase/config";
+import PostItem from "../components/PostItem";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const [selectedTag, setSelectedTag] = useState("all");
+  const [selectedVolunteer, setSelectedVolunteer] = useState("all");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const snapshot = await getDocs(collection(db, 'posts'));
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setPosts(data);
+      const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      const fetchedPosts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPosts(fetchedPosts);
     };
+
     fetchPosts();
   }, []);
 
-  const handleDelete = async (postId, imageUrl) => {
-    const confirm = window.confirm('Delete this post?');
-    if (!confirm) return;
+  // Получение списка уникальных волонтёров
+  const uniqueVolunteers = Array.from(
+    new Set(
+      posts
+        .filter((p) => p.volunteerName && p.volunteerLink)
+        .map((p) => `${p.volunteerName}|||${p.volunteerLink}`)
+    )
+  ).map((entry) => {
+    const [name, link] = entry.split("|||");
+    return { name, link };
+  });
 
-    await deleteDoc(doc(db, 'posts', postId));
-    if (imageUrl) {
-      const imageRef = ref(storage, imageUrl);
-      await deleteObject(imageRef).catch(() => {});
-    }
-
-    setPosts((prev) => prev.filter((p) => p.id !== postId));
+  const filterPosts = () => {
+    return posts.filter((post) => {
+      const tagMatch =
+        selectedTag === "all" || post.tags?.includes(selectedTag);
+      const volunteerMatch =
+        selectedVolunteer === "all" ||
+        post.volunteerName === selectedVolunteer;
+      return tagMatch && volunteerMatch;
+    });
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8 text-center">Rescue Stories</h1>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.length === 0 && <p>No posts yet.</p>}
-        {posts.map((post) => (
-          <PostItem key={post.id} post={post} onDelete={handleDelete} />
+    <div className="max-w-5xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Rescue Posts</h1>
+
+      {/* Фильтр по тегам */}
+      <div className="flex gap-4 mb-4 flex-wrap">
+        {[
+          { label: "All", value: "all" },
+          { label: "Food Needed", value: "food" },
+          { label: "Urgent", value: "urgent" },
+          { label: "Medical Help", value: "medical" },
+        ].map((tag) => (
+          <button
+            key={tag.value}
+            onClick={() => setSelectedTag(tag.value)}
+            className={`px-3 py-1 rounded-full border ${
+              selectedTag === tag.value
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {tag.label}
+          </button>
         ))}
+      </div>
+
+      {/* Фильтр по волонтёрам */}
+      {uniqueVolunteers.length > 0 && (
+        <div className="mb-6">
+          <h3 className="font-semibold mb-2">Filter by Volunteer:</h3>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedVolunteer("all")}
+              className={`px-3 py-1 rounded text-sm ${
+                selectedVolunteer === "all"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+            >
+              All
+            </button>
+            {uniqueVolunteers.map((vol) => (
+              <button
+                key={vol.link}
+                onClick={() => setSelectedVolunteer(vol.name)}
+                className={`px-3 py-1 rounded text-sm ${
+                  selectedVolunteer === vol.name
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {vol.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Посты */}
+      <div className="grid gap-6">
+        {filterPosts().length === 0 ? (
+          <p>No posts found.</p>
+        ) : (
+          filterPosts().map((post) => <PostItem key={post.id} post={post} />)
+        )}
       </div>
     </div>
   );
