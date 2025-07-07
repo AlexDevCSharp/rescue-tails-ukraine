@@ -56,6 +56,9 @@ const Posts = () => {
           { label: "Food Needed", value: "food" },
           { label: "Urgent", value: "urgent" },
           { label: "Medical Help", value: "medical" },
+          { label: "Adopted", value: "adopted" },
+          { label: "Rainbow Bridge", value: "rainbow" },
+          { label: "New Rescue", value: "new" },
         ].map((tag) => (
           <button
             key={tag.value}

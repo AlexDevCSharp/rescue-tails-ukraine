@@ -122,7 +122,6 @@ const Home = () => {
         >
           I Want to Help
         </Link>
-        <Link to="/volunteers" className="text-blue-600 underline">Manage Volunteers</Link>
       </section>
     </div>
   );

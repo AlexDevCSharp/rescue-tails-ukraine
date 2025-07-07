@@ -119,33 +119,24 @@ const NewPost = () => {
         )}
 
         <div className="flex flex-wrap gap-4 mt-4">
-          <label className="flex items-center gap-1">
-            <input
-              type="checkbox"
-              value="food"
-              checked={tags.includes("food")}
-              onChange={handleTagChange}
-            />
-            Food Needed
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="checkbox"
-              value="urgent"
-              checked={tags.includes("urgent")}
-              onChange={handleTagChange}
-            />
-            Urgent
-          </label>
-          <label className="flex items-center gap-1">
-            <input
-              type="checkbox"
-              value="medical"
-              checked={tags.includes("medical")}
-              onChange={handleTagChange}
-            />
-            Medical Help
-          </label>
+          {[
+            { label: "Food Needed", value: "food" },
+            { label: "Urgent", value: "urgent" },
+            { label: "Medical Help", value: "medical" },
+            { label: "Adopted", value: "adopted" },
+            { label: "Rainbow Bridge", value: "rainbow" },
+            { label: "New Rescue", value: "new" },
+          ].map((tag) => (
+            <label key={tag.value} className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                value={tag.value}
+                checked={tags.includes(tag.value)}
+                onChange={handleTagChange}
+              />
+              {tag.label}
+            </label>
+          ))}
         </div>
 
         <button
