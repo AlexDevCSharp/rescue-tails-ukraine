@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AddVolunteer from "./pages/AddVolunteer";
 import Volunteers from "./pages/Volunteers";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         />
         <Route path="/admin/add-volunteer" element={<AddVolunteer />} />
         <Route path="/volunteers" element={<ProtectedRoute><Volunteers /></ProtectedRoute>} />
+        <Route path="/account" element={<Account />} />
       </Routes>
       <Footer />
     </>

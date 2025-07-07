@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
+  const { user } = useAuth();
+
   return (
     <header className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -26,12 +29,24 @@ const Header = () => {
           >
             Facebook
           </a>
-          <Link to="/volunteers" className="text-blue-600 underline">Manage Volunteers</Link>
+          <Link
+            to="/volunteers"
+            className="text-blue-600 hover:underline"
+          >
+            Manage Volunteers
+          </Link>
+          {user && (
+            <Link
+              to="/account"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              Account
+            </Link>
+          )}
         </div>
       </div>
     </header>
   );
 };
-
 
 export default Header;
