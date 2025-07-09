@@ -42,6 +42,14 @@ const Home = () => {
             >
               Help Now
             </button>
+            <a
+              href="https://www.gofundme.com/f/help-street-dogs-cats-in-ukraine-rescue-tails-ukraine"
+              target="_blank"
+              rel="noreferrer"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded"
+            >
+              💸 Donate
+            </a>
           </div>
         </div>
       </section>
@@ -116,12 +124,14 @@ const Home = () => {
       <section className="bg-blue-600 py-12 text-white text-center px-4">
         <h2 className="text-2xl font-bold mb-4">Every small action saves lives</h2>
         <p className="mb-6">Your donation or even just a share helps animals in need.</p>
-        <Link
-          to="/login"
+        <a
+          href="https://www.gofundme.com/f/help-street-dogs-cats-in-ukraine-rescue-tails-ukraine"
+          target="_blank"
+          rel="noreferrer"
           className="bg-white text-blue-600 font-bold px-6 py-3 rounded hover:bg-gray-100 transition"
         >
-          I Want to Help
-        </Link>
+          💸 Donate Now
+        </a>
       </section>
     </div>
   );
