@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+import { db, storage } from "../firebase/config";
 import PostItem from "../components/PostItem";
 
 const Posts = () => {
@@ -10,19 +11,42 @@ const Posts = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
+      const snapshot = await getDocs(collection(db, "posts"));
       const fetchedPosts = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+
+      // сортировка по createdOnFacebook (по убыванию)
+      fetchedPosts.sort((a, b) => {
+        const dateA = a.createdOnFacebook?.toDate?.() || new Date(0);
+        const dateB = b.createdOnFacebook?.toDate?.() || new Date(0);
+        return dateB - dateA;
+      });
+
       setPosts(fetchedPosts);
     };
 
     fetchPosts();
   }, []);
 
-  // Получение списка уникальных волонтёров
+  const handleDelete = async (postId, imageUrl) => {
+    const confirm = window.confirm("Delete this post?");
+    if (!confirm) return;
+
+    try {
+      await deleteDoc(doc(db, "posts", postId));
+      if (imageUrl) {
+        const imageRef = ref(storage, imageUrl);
+        await deleteObject(imageRef).catch(() => {});
+      }
+
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
   const uniqueVolunteers = Array.from(
     new Set(
       posts
@@ -49,32 +73,44 @@ const Posts = () => {
     <div className="max-w-5xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Rescue Posts</h1>
 
-      {/* Фильтр по тегам */}
+      {/* Фильтры по тегам */}
       <div className="flex gap-4 mb-4 flex-wrap">
         {[
-          { label: "All", value: "all" },
-          { label: "Food Needed", value: "food" },
-          { label: "Urgent", value: "urgent" },
-          { label: "Medical Help", value: "medical" },
-          { label: "Adopted", value: "adopted" },
-          { label: "Rainbow Bridge", value: "rainbow" },
-          { label: "New Rescue", value: "new" },
+          "all",
+          "food",
+          "urgent",
+          "medical",
+          "adopted",
+          "rainbow",
+          "new",
         ].map((tag) => (
           <button
-            key={tag.value}
-            onClick={() => setSelectedTag(tag.value)}
+            key={tag}
+            onClick={() => setSelectedTag(tag)}
             className={`px-3 py-1 rounded-full border ${
-              selectedTag === tag.value
+              selectedTag === tag
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
           >
-            {tag.label}
+            {tag === "all"
+              ? "All"
+              : tag === "food"
+              ? "Food Needed"
+              : tag === "urgent"
+              ? "Urgent"
+              : tag === "medical"
+              ? "Medical Help"
+              : tag === "adopted"
+              ? "Adopted"
+              : tag === "rainbow"
+              ? "Rainbow Bridge"
+              : "New Rescue"}
           </button>
         ))}
       </div>
 
-      {/* Фильтр по волонтёрам */}
+      {/* Фильтры по волонтёрам */}
       {uniqueVolunteers.length > 0 && (
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Filter by Volunteer:</h3>
@@ -111,7 +147,9 @@ const Posts = () => {
         {filterPosts().length === 0 ? (
           <p>No posts found.</p>
         ) : (
-          filterPosts().map((post) => <PostItem key={post.id} post={post} />)
+          filterPosts().map((post) => (
+            <PostItem key={post.id} post={post} onDelete={handleDelete} />
+          ))
         )}
       </div>
     </div>

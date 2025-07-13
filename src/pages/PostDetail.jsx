@@ -5,6 +5,7 @@ import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
 import { format } from "date-fns";
+import CommentSection from "../components/CommentSection";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -111,6 +112,8 @@ const PostDetail = () => {
       )}
 
       <p className="text-gray-700 mb-4 whitespace-pre-line">{description}</p>
+
+      <CommentSection postId={post.id} />
 
       {facebookLink && (
         <a

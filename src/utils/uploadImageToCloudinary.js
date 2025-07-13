@@ -8,7 +8,7 @@ export const uploadImageToCloudinary = async (file, setUploading) => {
   try {
     setUploading?.(true); 
     const res = await axios.post(
-      "https://api.cloudinary.com/v1_1/c-19bb0bd05628c71aa4a984bde71290/image/upload", 
+      "https://api.cloudinary.com/v1_1/drmcu5khc/image/upload", 
       formData
     );
     return res.data.secure_url;

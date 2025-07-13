@@ -11,6 +11,7 @@ const NewPost = () => {
   const [facebookLink, setFacebookLink] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [tags, setTags] = useState([]);
+  const [createdOnFacebook, setCreatedOnFacebook] = useState("");
 
   const [volunteers, setVolunteers] = useState([]);
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
@@ -58,6 +59,7 @@ const NewPost = () => {
         facebookLink,
         imageUrl,
         createdAt: serverTimestamp(),
+        createdOnFacebook: createdOnFacebook ? new Date(createdOnFacebook) : serverTimestamp(),
         authorId: user.uid,
         tags,
         volunteerName: volunteer?.firstName + " " + volunteer?.lastName || "",
@@ -104,18 +106,28 @@ const NewPost = () => {
         />
 
         {isAdmin && (
-          <select
-            className="w-full border p-2 rounded"
-            value={selectedVolunteer}
-            onChange={(e) => setSelectedVolunteer(e.target.value)}
-          >
-            <option value="">Select Volunteer (optional)</option>
-            {volunteers.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.firstName} {v.lastName} ({v.city})
-              </option>
-            ))}
-          </select>
+          <>
+            <select
+              className="w-full border p-2 rounded"
+              value={selectedVolunteer}
+              onChange={(e) => setSelectedVolunteer(e.target.value)}
+            >
+              <option value="">Select Volunteer (optional)</option>
+              {volunteers.map((v) => (
+                <option key={v.id} value={v.id}>
+                  {v.firstName} {v.lastName} ({v.city})
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="date"
+              className="w-full border p-2 rounded"
+              value={createdOnFacebook}
+              onChange={(e) => setCreatedOnFacebook(e.target.value)}
+              required
+            />
+          </>
         )}
 
         <div className="flex flex-wrap gap-4 mt-4">

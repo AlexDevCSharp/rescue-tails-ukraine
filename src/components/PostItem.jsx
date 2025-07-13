@@ -18,7 +18,6 @@ const PostItem = ({ post, onDelete }) => {
   } = post;
 
   const createdDate = createdAt?.toDate?.();
-  const formattedDate = createdDate ? format(createdDate, "PPP p") : "";
 
   const tagStyles = {
     urgent: "bg-red-100 text-red-700",
@@ -45,10 +44,6 @@ const PostItem = ({ post, onDelete }) => {
               {title}
             </Link>
           </h2>
-
-          {formattedDate && (
-            <p className="text-xs text-gray-500 mb-2">{formattedDate}</p>
-          )}
 
           <p className="text-gray-700 text-sm mb-3">
             {description.length > 200
